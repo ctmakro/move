@@ -29,66 +29,27 @@ var range = x=>{var a=[];for(var i=0;i<x;i++)a.push(i);return a}
 var zeros = i=>range(i).map(x=>0)
 var ones = i=>range(i).map(x=>1)
 
+var __extends = function(d,b){
+  for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+}
 var make = (()=>{
-  var fp = Function.prototype
-  // var apply_populator = (obj,populator)=>{
-  //   if(typeof populator ==='function')
-  //   populator(obj);
-  //   else
-  //   Object.assign(obj,populator);
-  // }
-  // var apply_populators = (obj,arr)=>arr.map(p=>apply_populator(obj,p))
-  // var copyobject=obj=>Object.assign({},obj)
-  // var newclass = ()=>{
-  //   var i = function (){
-  //     if(this.global===undefined&&this.window===undefined){
-  //       // check if called with new operator. optimized for speed
-  //       this.init.apply(this,arguments)
-  //     }else{
-  //       var inst = {};inst.__proto__ = i.prototype
-  //       inst.init.apply(inst,arguments)
-  //       return inst
-  //       // return new i()
-  //     }
-  //   }
-  //   return i
-  // }
+  var _make = parent => populator => {
+    var nc = function(){if(this.init)this.init.apply(this,arguments)}
 
-  // instancing, equivalent to 'new class(arguments)'
-  // fp.new = function(){
-  //   var inst = {};inst.__proto__ = this.prototype
-  //   // instance.__proto__ = this.prototype
-  //   inst.init.apply(inst,arguments)
-  //   return inst
-  // }
-
-  // fp.is = thisf((t,instance)=>instance.__proto__===t.prototype)
-  // fp.self_populate = thisf(t=>apply_populators(t.prototype,t.populators))
-
-  // var baseclass = newclass()
-  // var baseclass = function(){}
-
-  // Master of FP
-  var _make = parent => {
-    return populator => {
-      var proto = {}
-      // var supermeth = (name,self)=> function(){parent.prototype[name].apply(self,args)}
-      if(typeof populator==='function'){
-        populator(proto, parent.prototype)
-      }else{
-        Object.assign(proto, populator)
-      }
-      proto.__proto__ = parent.prototype
-
-      var nc = proto.init?
-      function(){proto.init.apply(this,arguments)}:
-      function(){}
-      nc.prototype = proto
-      return nc
+    var proto = {}
+    if(typeof populator==='function'){
+      populator(proto, parent.prototype)
+    }else{
+      // Object.assign(proto, populator)
+      proto = populator
     }
-  }
+    proto.__proto__ = parent.prototype
+    nc.prototype = proto
 
-  fp.make = function(p){
+    __extends(nc,parent)
+    return nc
+  }
+  Function.prototype.make = function(p){ // now Class.make() is possible
     return _make(this)(p)
   }
   var base = function(){}
@@ -96,7 +57,6 @@ var make = (()=>{
   var make = _make(base)
   return make
 })()
-
 // below are tests, please ignore
 
 function test0(){
