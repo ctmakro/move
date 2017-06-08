@@ -2,7 +2,7 @@ var geid = (i)=>document.getElementById(i)
 var ce = (i)=>document.createElement(i)
 var print = console.log
 var range = (i)=>{
-  if(i === undefined) throw 'input to range() is undefined'
+  // if(i === undefined) throw 'input to range() is undefined'
   var arr=[];
   for(var k=0;k<i;k++)arr.push(k);
   return arr;
@@ -16,7 +16,14 @@ var assert = (cond,msg)=>{
 }
 
 var thisf = f=>function(a1,a2,a3,a4,a5){return f(this,a1,a2,a3,a4,a5)}
-var cond = (cond,exp1,exp2)=>cond?exp1:exp2;
+// var cond = (cond,exp1,exp2)=>cond?exp1:exp2;
+var cond = function(){
+  var arr = arguments
+  for(var i=0;i<arr.length;i+=2){
+    if(arr[i+1]!==undefined){if(arr[i]){return arr[i+1]}}
+    else{return arr[i]}
+  }
+}
 
 var range = x=>{var a=[];for(var i=0;i<x;i++)a.push(i);return a}
 var zeros = i=>range(i).map(x=>0)
@@ -89,6 +96,41 @@ var make = (()=>{
   var make = _make(base)
   return make
 })()
+
+// below are tests, please ignore
+
+function test0(){
+  var Animal = make(p=>{
+    p.init = function(sound){
+      this.sound = sound
+    }
+    p.say = function(){
+      print(this.sound)
+    }
+    Object.defineProperty(p,'legs',{
+      get(){return 4},
+      set(x){}
+    })
+  })
+
+  var Sheep = Animal.make((p,s)=>{
+    p.init = function(){
+      s.init.call(this,'baa')
+    }
+  })
+
+  var s = new Sheep()
+  s.say() // 'baa'
+
+  // or pass in a 'populator object'
+  var AngrySheep = Sheep.make({
+    say(){print(this.sound+'!!!')}
+  })
+
+  var as = new AngrySheep()
+  as.say() // 'baa!!!'
+}
+// test0()
 
 function test(){
   var Animal = make(p=>{

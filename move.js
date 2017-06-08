@@ -80,15 +80,15 @@ var Vec = VectorEssentials.make(p=>{
 
 }).make(VectorGetSet).make(ColorGetSet).make(RectGetSet).make(MatSizeGetSet)
 
-var argfilt = (n,arr)=>{if(arr.length!==n)throw 'bad array length';return arr}
-var vecnbase = n=>Vec.make({init(arr){
-  this.arr=argfilt(n,arr);this.size = this.arr.length
-}})
-var vecnbase = n=>Vec.make(p=>{
-  p.init = function(arr){
-    this.arr=argfilt(n,arr);this.size = this.arr.length;
-  }
-})
+// var argfilt = (n,arr)=>{if(arr.length!==n)throw 'bad array length';return arr}
+// var vecnbase = n=>Vec.make({init(arr){
+//   this.arr=argfilt(n,arr);this.size = this.arr.length
+// }})
+// var vecnbase = n=>Vec.make(p=>{
+//   p.init = function(arr){
+//     this.arr=argfilt(n,arr);this.size = this.arr.length;
+//   }
+// })
 var vecnbase = n=>Vec.make(p=>{
   p.init = function(arr){
     this.arr=arr;this.size = this.arr.length;
